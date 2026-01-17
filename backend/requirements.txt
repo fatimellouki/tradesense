@@ -1,0 +1,31 @@
+# TradeSense Backend Dependencies
+# Flask Core
+Flask==3.0.0
+Flask-RESTful==0.3.10
+Flask-SQLAlchemy==3.1.1
+Flask-JWT-Extended==4.6.0
+Flask-CORS==4.0.0
+Flask-Migrate==4.0.5
+
+# Database
+psycopg2-binary==2.9.9
+SQLAlchemy==2.0.36
+
+# Server
+gunicorn==21.2.0
+
+# Market Data
+yfinance==0.2.36
+BVCscrap==0.2.1
+
+# Web Scraping (fallback)
+beautifulsoup4==4.12.3
+requests==2.31.0
+lxml==5.1.0
+
+# Utilities
+python-dotenv==1.0.0
+Werkzeug==3.0.1
+
+# Background Tasks
+APScheduler==3.10.4
