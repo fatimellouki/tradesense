@@ -19,8 +19,8 @@ interface AuthState {
   error: string | null;
 
   // Actions
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
+  register: (email: string, username: string, password: string) => Promise<User>;
   logout: () => void;
   checkAuth: () => Promise<void>;
   clearError: () => void;
@@ -50,6 +50,7 @@ export const useAuthStore = create<AuthState>()(
 
           // Store token for API calls
           localStorage.setItem('token', access_token);
+          return user;
         } catch (error: any) {
           set({
             isLoading: false,
@@ -77,6 +78,7 @@ export const useAuthStore = create<AuthState>()(
           });
 
           localStorage.setItem('token', access_token);
+          return user;
         } catch (error: any) {
           set({
             isLoading: false,
