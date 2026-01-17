@@ -2,6 +2,7 @@
 Leaderboard Routes - Gamification
 """
 
+from datetime import datetime
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import User, UserChallenge, Trade, db
@@ -72,7 +73,7 @@ def get_top_10():
         'success': True,
         'data': {
             'leaderboard': top_10,
-            'updated_at': db.func.now()
+            'updated_at': datetime.utcnow().isoformat()
         }
     })
 
