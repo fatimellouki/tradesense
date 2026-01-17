@@ -93,7 +93,7 @@ def refresh_prices():
 @jwt_required()
 def execute_trade():
     """Execute a trade"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json()
 
     # Validate input
@@ -235,7 +235,7 @@ def execute_trade():
 @jwt_required()
 def get_positions():
     """Get open positions"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
     # Get active challenge
     challenge = UserChallenge.query.filter_by(
@@ -272,7 +272,7 @@ def get_positions():
 @jwt_required()
 def close_position(position_id):
     """Close an entire position"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
     position = Position.query.filter_by(
         id=position_id,
@@ -309,7 +309,7 @@ def get_ai_signals():
 @jwt_required()
 def get_trade_history():
     """Get trade history"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     challenge_id = request.args.get('challenge_id')
 
     query = Trade.query.filter_by(user_id=user_id)

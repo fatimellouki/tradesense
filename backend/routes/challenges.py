@@ -72,7 +72,7 @@ def get_plans():
 @jwt_required()
 def get_my_challenges():
     """Get user's challenges"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
     challenges = UserChallenge.query.filter_by(user_id=user_id).order_by(
         UserChallenge.created_at.desc()
@@ -90,7 +90,7 @@ def get_my_challenges():
 @jwt_required()
 def get_active_challenge():
     """Get user's active challenge"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
     challenge = UserChallenge.query.filter_by(
         user_id=user_id,
@@ -113,7 +113,7 @@ def get_active_challenge():
 @jwt_required()
 def get_challenge(challenge_id):
     """Get specific challenge details"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
     challenge = UserChallenge.query.filter_by(
         id=challenge_id,
@@ -136,7 +136,7 @@ def get_challenge(challenge_id):
 @jwt_required()
 def create_challenge():
     """Create a new challenge (after payment)"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json()
 
     plan_type = data.get('plan_type')
@@ -191,7 +191,7 @@ def create_challenge():
 @jwt_required()
 def get_challenge_status(challenge_id):
     """Get detailed challenge status with rules evaluation"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
     challenge = UserChallenge.query.filter_by(
         id=challenge_id,

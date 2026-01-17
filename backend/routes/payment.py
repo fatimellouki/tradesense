@@ -16,7 +16,7 @@ payment_bp = Blueprint('payment', __name__)
 @jwt_required()
 def create_order():
     """Create a payment order"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json()
 
     plan_type = data.get('plan_type')
@@ -72,7 +72,7 @@ def create_order():
 @jwt_required()
 def capture_order():
     """Capture/complete a payment order"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json()
 
     order_id = data.get('order_id')
@@ -144,7 +144,7 @@ def capture_order():
 @jwt_required()
 def verify_payment(reference):
     """Verify a payment"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
     challenge = UserChallenge.query.filter_by(
         user_id=user_id,

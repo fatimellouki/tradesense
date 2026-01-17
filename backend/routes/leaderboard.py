@@ -81,7 +81,7 @@ def get_top_10():
 @jwt_required()
 def get_my_rank():
     """Get current user's ranking"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
     # Get user's active/passed challenge
     challenge = UserChallenge.query.filter(
