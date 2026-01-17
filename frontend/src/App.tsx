@@ -9,6 +9,7 @@ import LoginPage from './features/auth/LoginPage';
 import RegisterPage from './features/auth/RegisterPage';
 import Dashboard from './features/dashboard/Dashboard';
 import PricingPage from './features/payment/PricingPage';
+import PayPalCallback from './features/payment/PayPalCallback';
 import LeaderboardPage from './features/leaderboard/LeaderboardPage';
 import AdminDashboard from './features/admin/AdminDashboard';
 
@@ -47,6 +48,7 @@ function App() {
               isAuthenticated ? <Navigate to="/dashboard" /> : <RegisterPage />
             } />
             <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/payment/callback" element={<PayPalCallback />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />
 
             {/* Protected routes */}

@@ -214,6 +214,7 @@ def create_paypal_order(amount, plan_type):
         return None
 
     base_url = os.environ.get('PAYPAL_API_URL', 'https://api-m.sandbox.paypal.com')
+    frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
 
     # Convert DH to USD (approximate)
     usd_amount = round(amount / 10, 2)
@@ -232,7 +233,14 @@ def create_paypal_order(amount, plan_type):
                     'value': str(usd_amount)
                 },
                 'description': f'TradeSense {plan_type.capitalize()} Challenge'
-            }]
+            }],
+            'application_context': {
+                'return_url': f'{frontend_url}/payment/callback',
+                'cancel_url': f'{frontend_url}/pricing',
+                'brand_name': 'TradeSense AI',
+                'landing_page': 'LOGIN',
+                'user_action': 'PAY_NOW'
+            }
         }
     )
 

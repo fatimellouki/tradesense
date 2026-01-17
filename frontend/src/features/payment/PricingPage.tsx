@@ -74,9 +74,19 @@ export default function PricingPage() {
         payment_method: paymentMethod,
       });
 
-      // Capture order (mock payment)
+      const orderData = orderResponse.data.data;
+
+      if (paymentMethod === 'paypal' && orderData.approval_url) {
+        // Store plan_type for callback
+        localStorage.setItem('pending_plan', selectedPlan);
+        // Redirect to PayPal for approval
+        window.location.href = orderData.approval_url;
+        return;
+      }
+
+      // For mock/CMI payment - capture immediately
       const captureResponse = await api.post('/payment/capture-order', {
-        order_id: orderResponse.data.data.order_id,
+        order_id: orderData.order_id,
         payment_method: paymentMethod,
         plan_type: selectedPlan,
       });
