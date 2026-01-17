@@ -2,6 +2,7 @@
 Authentication Routes
 """
 
+import os
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     create_access_token, create_refresh_token,
@@ -149,3 +150,75 @@ def update_preferences():
         'message': 'Preferences updated',
         'data': {'user': user.to_dict()}
     })
+
+
+@auth_bp.route('/setup-superadmin', methods=['POST'])
+def setup_superadmin():
+    """
+    One-time superadmin setup endpoint.
+    Requires a secret key for security.
+    Can either create a new superadmin or promote an existing user.
+    """
+    data = request.get_json()
+
+    if not data:
+        return jsonify({'success': False, 'error': 'No data provided'}), 400
+
+    # Verify setup secret key
+    setup_key = data.get('setup_key', '')
+    expected_key = os.environ.get('SETUP_SECRET_KEY', 'TradeSense2026SuperAdmin!')
+
+    if setup_key != expected_key:
+        return jsonify({'success': False, 'error': 'Invalid setup key'}), 403
+
+    email = data.get('email', '').strip().lower()
+
+    if not email:
+        return jsonify({'success': False, 'error': 'Email is required'}), 400
+
+    # Check if user exists
+    user = User.query.filter_by(email=email).first()
+
+    if user:
+        # Promote existing user to superadmin
+        user.role = 'superadmin'
+        db.session.commit()
+
+        return jsonify({
+            'success': True,
+            'message': f'User {user.username} promoted to superadmin',
+            'data': {'user': user.to_dict()}
+        })
+    else:
+        # Create new superadmin
+        username = data.get('username', '').strip()
+        password = data.get('password', '')
+
+        if not username or not password:
+            return jsonify({'success': False, 'error': 'Username and password required for new user'}), 400
+
+        if len(password) < 6:
+            return jsonify({'success': False, 'error': 'Password must be at least 6 characters'}), 400
+
+        if User.query.filter_by(username=username).first():
+            return jsonify({'success': False, 'error': 'Username already taken'}), 400
+
+        user = User(email=email, username=username, role='superadmin')
+        user.set_password(password)
+
+        db.session.add(user)
+        db.session.commit()
+
+        # Generate tokens
+        access_token = create_access_token(identity=str(user.id))
+        refresh_token = create_refresh_token(identity=str(user.id))
+
+        return jsonify({
+            'success': True,
+            'message': 'Superadmin created successfully',
+            'data': {
+                'user': user.to_dict(),
+                'access_token': access_token,
+                'refresh_token': refresh_token
+            }
+        }), 201
