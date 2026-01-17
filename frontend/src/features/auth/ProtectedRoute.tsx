@@ -9,7 +9,12 @@ interface ProtectedRouteProps {
 export default function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
   const { isAuthenticated, user } = useAuthStore();
 
+  // Redirect to appropriate login page based on route type
   if (!isAuthenticated) {
+    // Admin routes redirect to admin login
+    if (requiredRole === 'admin' || requiredRole === 'superadmin') {
+      return <Navigate to="/admin/login" />;
+    }
     return <Navigate to="/login" />;
   }
 
@@ -20,7 +25,8 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
       (requiredRole === 'admin' && user?.role === 'admin');
 
     if (!hasAccess) {
-      return <Navigate to="/dashboard" />;
+      // Non-admin trying to access admin - redirect to admin login
+      return <Navigate to="/admin/login" />;
     }
   }
 
