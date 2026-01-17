@@ -128,21 +128,21 @@ class MarketDataService:
         """Fallback data for US/Crypto when yfinance fails"""
         import random
 
-        # Approximate prices for demo (Jan 2026)
+        # Real prices as of January 17, 2026
         fallback_prices = {
             # US Stocks
-            'AAPL': 195.50,
-            'TSLA': 248.00,
-            'GOOGL': 142.00,
-            'MSFT': 378.00,
-            'AMZN': 186.00,
-            'META': 355.00,
-            'NVDA': 495.00,
+            'AAPL': 255.53,
+            'TSLA': 437.50,
+            'GOOGL': 197.00,
+            'MSFT': 459.91,
+            'AMZN': 239.09,
+            'META': 622.19,
+            'NVDA': 186.23,
             # Crypto
-            'BTC-USD': 43250.00,
-            'ETH-USD': 2280.00,
-            'SOL-USD': 98.50,
-            'BNB-USD': 312.00,
+            'BTC-USD': 95456.24,
+            'ETH-USD': 3317.09,
+            'SOL-USD': 144.59,
+            'BNB-USD': 695.00,
         }
 
         base_price = fallback_prices.get(symbol, 100.00)
