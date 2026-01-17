@@ -12,6 +12,7 @@ import PricingPage from './features/payment/PricingPage';
 import PayPalCallback from './features/payment/PayPalCallback';
 import LeaderboardPage from './features/leaderboard/LeaderboardPage';
 import AdminDashboard from './features/admin/AdminDashboard';
+import AdminLoginPage from './features/admin/AdminLoginPage';
 
 // Components
 import Navbar from './components/layout/Navbar';
@@ -59,6 +60,7 @@ function App() {
             } />
 
             {/* Admin routes */}
+            <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/admin" element={
               <ProtectedRoute requiredRole="admin">
                 <AdminDashboard />

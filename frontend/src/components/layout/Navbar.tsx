@@ -44,11 +44,6 @@ export default function Navbar() {
                 Dashboard
               </Link>
             )}
-            {isAuthenticated && (user?.role === 'admin' || user?.role === 'superadmin') && (
-              <Link to="/admin" className="text-gray-300 hover:text-white transition">
-                Admin
-              </Link>
-            )}
           </div>
 
           {/* Right side */}
