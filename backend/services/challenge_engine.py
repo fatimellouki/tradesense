@@ -46,10 +46,20 @@ class ChallengeEngine:
         initial = float(challenge.initial_balance)
         current_balance = float(challenge.current_balance)
 
-        # Calculate equity (balance + unrealized P&L)
+        # Calculate equity (balance + position market values)
+        # Equity = Cash Balance + Sum of (current_price * quantity for all positions)
         positions = Position.query.filter_by(challenge_id=challenge_id).all()
-        unrealized_pnl = sum(float(p.unrealized_pnl or 0) for p in positions)
-        equity = current_balance + unrealized_pnl
+
+        # Calculate total position value (market value of all holdings)
+        position_value = 0
+        for p in positions:
+            current_price = float(p.current_price or p.entry_price)
+            qty = float(p.quantity)
+            position_value += current_price * qty
+            # Also update unrealized PnL for reporting
+            p.unrealized_pnl = (current_price - float(p.entry_price)) * qty
+
+        equity = current_balance + position_value
 
         # Update challenge equity
         challenge.equity = equity
