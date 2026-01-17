@@ -83,7 +83,7 @@ def create_app(config_name=None):
         return jsonify({
             'status': 'healthy',
             'service': 'TradeSense API',
-            'version': '1.0.0'
+            'version': '1.0.1'
         })
 
     # Create database tables
