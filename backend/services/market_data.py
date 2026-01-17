@@ -78,7 +78,8 @@ class MarketDataService:
         except Exception as e:
             print(f"yfinance error for {symbol}: {e}")
 
-        return None
+        # Return fallback data if yfinance fails
+        return self._get_fallback_price(symbol, market)
 
     def get_morocco_price(self, symbol):
         """Get price for Moroccan stocks from BVCscrap"""
@@ -122,6 +123,44 @@ class MarketDataService:
             return self._get_morocco_fallback(symbol)
 
         return None
+
+    def _get_fallback_price(self, symbol, market):
+        """Fallback data for US/Crypto when yfinance fails"""
+        import random
+
+        # Approximate prices for demo (Jan 2026)
+        fallback_prices = {
+            # US Stocks
+            'AAPL': 195.50,
+            'TSLA': 248.00,
+            'GOOGL': 142.00,
+            'MSFT': 378.00,
+            'AMZN': 186.00,
+            'META': 355.00,
+            'NVDA': 495.00,
+            # Crypto
+            'BTC-USD': 43250.00,
+            'ETH-USD': 2280.00,
+            'SOL-USD': 98.50,
+            'BNB-USD': 312.00,
+        }
+
+        base_price = fallback_prices.get(symbol, 100.00)
+        variation = random.uniform(-0.02, 0.02)
+        price = base_price * (1 + variation)
+
+        return {
+            'symbol': symbol,
+            'market': market,
+            'price': round(price, 2 if market == 'us' else 2),
+            'open': round(base_price * 0.995, 2),
+            'high': round(base_price * 1.015, 2),
+            'low': round(base_price * 0.985, 2),
+            'change_percent': round(variation * 100, 2),
+            'volume': random.randint(1000000, 50000000),
+            'timestamp': datetime.utcnow().isoformat(),
+            'is_fallback': True
+        }
 
     def _get_morocco_fallback(self, symbol):
         """Fallback data for Morocco stocks when BVCscrap fails"""
