@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Trophy, Medal, TrendingUp } from 'lucide-react';
 import api from '../../services/api';
 
@@ -12,6 +13,7 @@ interface LeaderboardEntry {
 }
 
 export default function LeaderboardPage() {
+  const { t } = useTranslation();
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [, setIsLoading] = useState(true);
 
@@ -63,9 +65,9 @@ export default function LeaderboardPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Classement des Traders</h1>
+        <h1 className="text-4xl font-bold mb-4">{t('leaderboard.title')}</h1>
         <p className="text-gray-400">
-          Top 10 des meilleurs traders du mois
+          {t('leaderboard.subtitle')}
         </p>
       </div>
 
@@ -103,12 +105,12 @@ export default function LeaderboardPage() {
         <table className="w-full">
           <thead>
             <tr className="text-left text-gray-400 border-b border-dark-600">
-              <th className="pb-4">Rang</th>
-              <th className="pb-4">Trader</th>
-              <th className="pb-4">Plan</th>
-              <th className="pb-4 text-right">Profit</th>
-              <th className="pb-4 text-right hidden md:table-cell">Trades</th>
-              <th className="pb-4 text-right hidden md:table-cell">Win Rate</th>
+              <th className="pb-4">{t('leaderboard.rank')}</th>
+              <th className="pb-4">{t('leaderboard.trader')}</th>
+              <th className="pb-4">{t('leaderboard.plan')}</th>
+              <th className="pb-4 text-right">{t('leaderboard.profit')}</th>
+              <th className="pb-4 text-right hidden md:table-cell">{t('leaderboard.trades')}</th>
+              <th className="pb-4 text-right hidden md:table-cell">{t('leaderboard.win_rate')}</th>
             </tr>
           </thead>
           <tbody>

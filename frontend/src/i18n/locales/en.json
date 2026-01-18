@@ -1,0 +1,252 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "pricing": "Pricing",
+    "leaderboard": "Leaderboard",
+    "admin": "Admin",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "language": "Language"
+  },
+  "landing": {
+    "hero": {
+      "title": "TradeSense AI",
+      "subtitle": "Africa's First AI-Powered Prop Firm",
+      "description": "A next-generation trading platform designed to guide traders of all levels, from beginners to professionals. Combine real-time AI analysis, intelligent tools, and premium education.",
+      "cta_start": "Start the Challenge",
+      "cta_pricing": "View Pricing"
+    },
+    "features": {
+      "title": "Why Choose TradeSense AI?",
+      "subtitle": "Everything you need to succeed in trading, on a single platform.",
+      "ai_assistance": {
+        "title": "AI Assistance",
+        "description": "Buy/Sell/Stop signals directly on your screen. Personalized trade plans and real-time risk alerts."
+      },
+      "realtime_dashboard": {
+        "title": "Real-Time Dashboard",
+        "description": "Professional charts with live data. US markets, Crypto, and Casablanca Stock Exchange integrated."
+      },
+      "news_hub": {
+        "title": "News Hub",
+        "description": "Real-time financial news, AI-generated market summaries, and economic event alerts."
+      },
+      "community": {
+        "title": "Community Zone",
+        "description": "Connect with other traders, share strategies, and learn from community experts."
+      },
+      "masterclass": {
+        "title": "MasterClass",
+        "description": "Complete academy with beginner to advanced courses, live webinars, and AI-guided learning paths."
+      },
+      "risk_management": {
+        "title": "Risk Management",
+        "description": "Strict protection rules: 5% max daily loss, 10% max total loss. Your capital is protected."
+      }
+    },
+    "how_it_works": {
+      "title": "How It Works?",
+      "subtitle": "Three simple steps to become a funded trader",
+      "step1": {
+        "title": "Choose a Challenge",
+        "description": "Select from our Starter, Pro, or Elite plans based on your level and goals."
+      },
+      "step2": {
+        "title": "Trade and Learn",
+        "description": "Use our AI platform to trade on real data and reach the 10% profit target."
+      },
+      "step3": {
+        "title": "Get Funded",
+        "description": "Pass the challenge and access a funded account with real money to trade."
+      }
+    },
+    "why_choose": {
+      "title": "Why Traders Choose TradeSense AI",
+      "reasons": [
+        "One platform for trading, learning, and community",
+        "AI signals and real-time risk alerts",
+        "News + social + MasterClass in one interface",
+        "Perfect for beginners and experienced traders",
+        "Helps you make smarter decisions, faster"
+      ],
+      "cta_title": "Ready to Start?",
+      "cta_subtitle": "Join thousands of traders who trust TradeSense AI",
+      "cta_button": "Create Free Account"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "no_account": "Don't have an account?",
+      "register_link": "Sign up"
+    },
+    "register": {
+      "title": "Register",
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "confirm_password": "Confirm password",
+      "submit": "Sign Up",
+      "has_account": "Already have an account?",
+      "login_link": "Sign in"
+    }
+  },
+  "dashboard": {
+    "no_challenge": {
+      "title": "No Active Challenge",
+      "description": "You must first purchase a challenge to start trading.",
+      "cta": "Choose a Challenge"
+    },
+    "stats": {
+      "balance": "Balance",
+      "equity": "Equity",
+      "pnl_total": "Total P&L",
+      "status": "Status",
+      "status_active": "Active",
+      "status_passed": "Passed",
+      "status_failed": "Failed"
+    },
+    "rules": {
+      "title": "Challenge Rules",
+      "daily_loss": "Max Daily Loss",
+      "total_loss": "Max Total Loss",
+      "profit_target": "Profit Target"
+    },
+    "markets": {
+      "us": "US",
+      "crypto": "Crypto",
+      "morocco": "Morocco"
+    },
+    "trading": {
+      "title": "Execute Trade",
+      "quantity": "Quantity",
+      "value": "Value",
+      "buy": "BUY",
+      "sell": "SELL",
+      "success": "Trade executed",
+      "challenge_failed": "Challenge FAILED",
+      "challenge_passed": "Congratulations! Challenge PASSED!",
+      "error": "Trade error"
+    },
+    "signals": {
+      "title": "AI Signals",
+      "buy": "BUY",
+      "sell": "SELL",
+      "hold": "HOLD",
+      "confidence": "Confidence",
+      "no_signals": "No signals available",
+      "loading": "Loading signals..."
+    },
+    "positions": {
+      "title": "Open Positions",
+      "no_positions": "No positions"
+    }
+  },
+  "pricing": {
+    "title": "Choose Your Challenge",
+    "subtitle": "Select the plan that matches your trading goals",
+    "starter": {
+      "name": "Starter",
+      "balance": "$5,000",
+      "description": "Ideal for beginners"
+    },
+    "pro": {
+      "name": "Pro",
+      "balance": "$10,000",
+      "description": "For intermediate traders",
+      "popular": "Popular"
+    },
+    "elite": {
+      "name": "Elite",
+      "balance": "$25,000",
+      "description": "For experienced traders"
+    },
+    "features": {
+      "daily_loss": "Max Daily Loss: 5%",
+      "total_loss": "Max Total Loss: 10%",
+      "profit_target": "Profit Target: 10%",
+      "real_data": "Live Market Data",
+      "ai_signals": "AI Signals Included"
+    },
+    "select": "Choose this Plan",
+    "payment": {
+      "title": "Payment",
+      "method": "Payment Method",
+      "paypal": "PayPal",
+      "mock": "Simulation (Demo)",
+      "processing": "Processing...",
+      "success": "Payment successful! Challenge activated.",
+      "error": "Payment error"
+    }
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "subtitle": "Top 10 Traders of the Month",
+    "rank": "Rank",
+    "trader": "Trader",
+    "profit": "Profit",
+    "trades": "Trades",
+    "win_rate": "Win Rate",
+    "plan": "Plan",
+    "no_traders": "No traders on the leaderboard",
+    "your_rank": "Your Position",
+    "percentile": "Percentile"
+  },
+  "admin": {
+    "title": "Administration",
+    "stats": {
+      "total_users": "Users",
+      "active_challenges": "Active Challenges",
+      "passed_challenges": "Passed Challenges",
+      "failed_challenges": "Failed Challenges",
+      "total_trades": "Total Trades"
+    },
+    "users": {
+      "title": "User Management",
+      "search": "Search user...",
+      "role": "Role",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "challenges": {
+      "title": "Challenge Management",
+      "status_filter": "Filter by status",
+      "update_status": "Update Status"
+    },
+    "superadmin": {
+      "title": "SuperAdmin Configuration",
+      "paypal": {
+        "title": "PayPal Configuration",
+        "client_id": "PayPal Client ID",
+        "client_secret": "PayPal Client Secret",
+        "save": "Save Configuration"
+      }
+    }
+  },
+  "footer": {
+    "copyright": "TradeSense AI. All rights reserved.",
+    "tagline": "Africa's first AI-powered Prop Firm"
+  }
+}

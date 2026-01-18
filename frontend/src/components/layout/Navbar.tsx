@@ -1,7 +1,10 @@
+import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/authStore';
 import { useUIStore } from '../../store/uiStore';
-import { Sun, Moon, Globe, LogOut, Menu } from 'lucide-react';
+import { changeLanguage } from '../../i18n';
+import { Sun, Moon, Globe, LogOut, Menu, ChevronDown } from 'lucide-react';
 
 const languages = [
   { code: 'fr', label: 'Francais' },
@@ -10,13 +13,33 @@ const languages = [
 ];
 
 export default function Navbar() {
+  const { t } = useTranslation();
   const { isAuthenticated, user, logout } = useAuthStore();
   const { darkMode, toggleDarkMode, language, setLanguage } = useUIStore();
   const navigate = useNavigate();
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const langMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (langMenuRef.current && !langMenuRef.current.contains(event.target as Node)) {
+        setLangMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const handleLanguageChange = (langCode: 'fr' | 'en' | 'ar') => {
+    setLanguage(langCode);
+    changeLanguage(langCode);
+    setLangMenuOpen(false);
   };
 
   return (
@@ -34,38 +57,50 @@ export default function Navbar() {
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/pricing" className="text-gray-300 hover:text-white transition">
-              Tarification
+              {t('nav.pricing')}
             </Link>
             <Link to="/leaderboard" className="text-gray-300 hover:text-white transition">
-              Classement
+              {t('nav.leaderboard')}
             </Link>
             {isAuthenticated && (
               <Link to="/dashboard" className="text-gray-300 hover:text-white transition">
-                Dashboard
+                {t('nav.dashboard')}
               </Link>
             )}
+            {user?.role === 'admin' || user?.role === 'superadmin' ? (
+              <Link to="/admin" className="text-gray-300 hover:text-white transition">
+                {t('nav.admin')}
+              </Link>
+            ) : null}
           </div>
 
           {/* Right side */}
           <div className="flex items-center space-x-4">
             {/* Language Selector */}
-            <div className="relative group">
-              <button className="p-2 text-gray-400 hover:text-white transition">
+            <div className="relative" ref={langMenuRef}>
+              <button
+                onClick={() => setLangMenuOpen(!langMenuOpen)}
+                className="p-2 text-gray-400 hover:text-white transition flex items-center gap-1"
+              >
                 <Globe size={20} />
+                <span className="text-xs uppercase">{language}</span>
+                <ChevronDown size={14} className={`transition-transform ${langMenuOpen ? 'rotate-180' : ''}`} />
               </button>
-              <div className="absolute right-0 mt-2 w-32 bg-dark-800 border border-dark-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                {languages.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => setLanguage(lang.code as 'fr' | 'en' | 'ar')}
-                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-dark-700 ${
-                      language === lang.code ? 'text-primary-500' : 'text-gray-300'
-                    }`}
-                  >
-                    {lang.label}
-                  </button>
-                ))}
-              </div>
+              {langMenuOpen && (
+                <div className="absolute right-0 top-full mt-1 w-32 bg-dark-800 border border-dark-700 rounded-lg shadow-lg overflow-hidden z-50">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => handleLanguageChange(lang.code as 'fr' | 'en' | 'ar')}
+                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-dark-700 transition ${
+                        language === lang.code ? 'text-primary-500 bg-dark-700/50' : 'text-gray-300'
+                      }`}
+                    >
+                      {lang.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Dark Mode Toggle */}
@@ -83,6 +118,7 @@ export default function Navbar() {
                 <button
                   onClick={handleLogout}
                   className="p-2 text-gray-400 hover:text-red-500 transition"
+                  title={t('nav.logout')}
                 >
                   <LogOut size={20} />
                 </button>
@@ -93,13 +129,13 @@ export default function Navbar() {
                   to="/login"
                   className="px-4 py-2 text-gray-300 hover:text-white transition"
                 >
-                  Connexion
+                  {t('nav.login')}
                 </Link>
                 <Link
                   to="/register"
                   className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition"
                 >
-                  S'inscrire
+                  {t('nav.register')}
                 </Link>
               </div>
             )}

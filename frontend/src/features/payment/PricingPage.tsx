@@ -1,61 +1,59 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/authStore';
 import { Check, Loader2 } from 'lucide-react';
 import api from '../../services/api';
 
-const plans = [
-  {
-    id: 'starter',
-    name: 'Starter',
-    price: 200,
-    balance: 5000,
-    features: [
-      'Solde initial de 5 000 $',
-      'Perte max journaliere: 5%',
-      'Perte max totale: 10%',
-      'Objectif de profit: 10%',
-      'Support par email',
-    ],
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    price: 500,
-    balance: 10000,
-    popular: true,
-    features: [
-      'Solde initial de 10 000 $',
-      'Perte max journaliere: 5%',
-      'Perte max totale: 10%',
-      'Objectif de profit: 10%',
-      'Support prioritaire',
-      'Signaux IA premium',
-    ],
-  },
-  {
-    id: 'elite',
-    name: 'Elite',
-    price: 1000,
-    balance: 25000,
-    features: [
-      'Solde initial de 25 000 $',
-      'Perte max journaliere: 5%',
-      'Perte max totale: 10%',
-      'Objectif de profit: 10%',
-      'Support VIP 24/7',
-      'Signaux IA premium',
-      'Acces MasterClass complet',
-    ],
-  },
-];
-
 export default function PricingPage() {
+  const { t } = useTranslation();
   const { isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'mock' | 'paypal'>('mock');
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const plans = [
+    {
+      id: 'starter',
+      name: t('pricing.starter.name'),
+      price: 200,
+      balance: 5000,
+      features: [
+        t('pricing.features.daily_loss'),
+        t('pricing.features.total_loss'),
+        t('pricing.features.profit_target'),
+        t('pricing.features.real_data'),
+      ],
+    },
+    {
+      id: 'pro',
+      name: t('pricing.pro.name'),
+      price: 500,
+      balance: 10000,
+      popular: true,
+      features: [
+        t('pricing.features.daily_loss'),
+        t('pricing.features.total_loss'),
+        t('pricing.features.profit_target'),
+        t('pricing.features.real_data'),
+        t('pricing.features.ai_signals'),
+      ],
+    },
+    {
+      id: 'elite',
+      name: t('pricing.elite.name'),
+      price: 1000,
+      balance: 25000,
+      features: [
+        t('pricing.features.daily_loss'),
+        t('pricing.features.total_loss'),
+        t('pricing.features.profit_target'),
+        t('pricing.features.real_data'),
+        t('pricing.features.ai_signals'),
+      ],
+    },
+  ];
 
   const handlePurchase = async () => {
     if (!isAuthenticated) {
@@ -104,10 +102,9 @@ export default function PricingPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Choisissez Votre Challenge</h1>
+        <h1 className="text-4xl font-bold mb-4">{t('pricing.title')}</h1>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Selectionnez le plan qui correspond a votre niveau et commencez
-          votre parcours vers le financement.
+          {t('pricing.subtitle')}
         </p>
       </div>
 
@@ -125,7 +122,7 @@ export default function PricingPage() {
             {plan.popular && (
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                 <span className="bg-primary-600 text-white text-sm font-medium px-4 py-1 rounded-full">
-                  Populaire
+                  {t('pricing.pro.popular')}
                 </span>
               </div>
             )}
@@ -156,7 +153,7 @@ export default function PricingPage() {
                   : 'bg-dark-700 text-gray-300 hover:bg-dark-600'
               }`}
             >
-              {selectedPlan === plan.id ? 'Selectionne' : 'Selectionner'}
+              {selectedPlan === plan.id ? t('pricing.selected', { defaultValue: 'Selected' }) : t('pricing.select')}
             </button>
           </div>
         ))}
@@ -166,7 +163,7 @@ export default function PricingPage() {
       {selectedPlan && (
         <div className="max-w-md mx-auto">
           <div className="card">
-            <h3 className="text-xl font-semibold mb-4">Methode de Paiement</h3>
+            <h3 className="text-xl font-semibold mb-4">{t('pricing.payment.method')}</h3>
 
             <div className="space-y-3 mb-6">
               <button
@@ -177,7 +174,7 @@ export default function PricingPage() {
                     : 'border-dark-600 hover:border-dark-500'
                 }`}
               >
-                <span>CMI / Carte Bancaire (Demo)</span>
+                <span>{t('pricing.payment.mock')}</span>
                 {paymentMethod === 'mock' && <Check className="text-primary-500" size={20} />}
               </button>
 
@@ -189,7 +186,7 @@ export default function PricingPage() {
                     : 'border-dark-600 hover:border-dark-500'
                 }`}
               >
-                <span>PayPal</span>
+                <span>{t('pricing.payment.paypal')}</span>
                 {paymentMethod === 'paypal' && <Check className="text-primary-500" size={20} />}
               </button>
             </div>
@@ -202,12 +199,12 @@ export default function PricingPage() {
               {isProcessing ? (
                 <>
                   <Loader2 className="animate-spin mr-2" size={20} />
-                  Traitement...
+                  {t('pricing.payment.processing')}
                 </>
               ) : isAuthenticated ? (
-                `Payer ${plans.find(p => p.id === selectedPlan)?.price} DH`
+                `${t('pricing.payment.pay', { defaultValue: 'Pay' })} ${plans.find(p => p.id === selectedPlan)?.price} DH`
               ) : (
-                'Connectez-vous pour continuer'
+                t('pricing.payment.login_required', { defaultValue: 'Login to continue' })
               )}
             </button>
           </div>

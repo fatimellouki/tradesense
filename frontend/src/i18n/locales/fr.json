@@ -1,0 +1,252 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succes",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "submit": "Soumettre",
+    "back": "Retour",
+    "next": "Suivant",
+    "close": "Fermer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "all": "Tous",
+    "none": "Aucun",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "nav": {
+    "home": "Accueil",
+    "dashboard": "Tableau de Bord",
+    "pricing": "Tarifs",
+    "leaderboard": "Classement",
+    "admin": "Administration",
+    "login": "Connexion",
+    "register": "Inscription",
+    "logout": "Deconnexion",
+    "language": "Langue"
+  },
+  "landing": {
+    "hero": {
+      "title": "TradeSense AI",
+      "subtitle": "La Premiere Prop Firm Assistee par IA pour l'Afrique",
+      "description": "Une plateforme de trading de nouvelle generation concue pour guider les traders de tous niveaux, debutants ou professionnels. Combinez analyses IA en temps reel, outils intelligents et education premium.",
+      "cta_start": "Commencer le Challenge",
+      "cta_pricing": "Voir les Tarifs"
+    },
+    "features": {
+      "title": "Pourquoi Choisir TradeSense AI?",
+      "subtitle": "Tout ce dont vous avez besoin pour reussir dans le trading, sur une seule plateforme.",
+      "ai_assistance": {
+        "title": "Assistance IA",
+        "description": "Signaux Achat/Vente/Stop directement sur votre ecran. Plans de trade personnalises et alertes de risque en temps reel."
+      },
+      "realtime_dashboard": {
+        "title": "Dashboard Temps Reel",
+        "description": "Graphiques professionnels avec donnees en direct. Marches US, Crypto et Bourse de Casablanca integres."
+      },
+      "news_hub": {
+        "title": "Hub d'Actualites",
+        "description": "Actualites financieres en temps reel, resumes de marche crees par l'IA et alertes d'evenements economiques."
+      },
+      "community": {
+        "title": "Zone Communautaire",
+        "description": "Discutez avec d'autres traders, partagez des strategies et apprenez des experts de la communaute."
+      },
+      "masterclass": {
+        "title": "MasterClass",
+        "description": "Academie complete avec cours du debutant a l'avance, webinaires en direct et parcours assistes par IA."
+      },
+      "risk_management": {
+        "title": "Gestion du Risque",
+        "description": "Regles strictes de protection: perte max journaliere 5%, perte max totale 10%. Votre capital est protege."
+      }
+    },
+    "how_it_works": {
+      "title": "Comment Ca Marche?",
+      "subtitle": "Trois etapes simples pour devenir un trader finance",
+      "step1": {
+        "title": "Choisissez un Challenge",
+        "description": "Selectionnez parmi nos plans Starter, Pro ou Elite selon votre niveau et vos objectifs."
+      },
+      "step2": {
+        "title": "Tradez et Apprenez",
+        "description": "Utilisez notre plateforme IA pour trader sur des donnees reelles et atteindre l'objectif de profit de 10%."
+      },
+      "step3": {
+        "title": "Devenez Finance",
+        "description": "Reussissez le challenge et accedez a un compte finance avec de vrais fonds a trader."
+      }
+    },
+    "why_choose": {
+      "title": "Pourquoi les Traders Choisissent TradeSense AI",
+      "reasons": [
+        "Une plateforme unique pour le trading, l'apprentissage et la communaute",
+        "Signaux IA et alertes de risque en temps reel",
+        "Actus + social + MasterClass dans une seule interface",
+        "Ideal pour les debutants et les traders experimentes",
+        "Vous aide a prendre des decisions plus intelligentes, plus rapidement"
+      ],
+      "cta_title": "Pret a Commencer?",
+      "cta_subtitle": "Rejoignez des milliers de traders qui font confiance a TradeSense AI",
+      "cta_button": "Creer un Compte Gratuit"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "email": "Email",
+      "password": "Mot de passe",
+      "submit": "Se Connecter",
+      "no_account": "Pas encore de compte?",
+      "register_link": "Inscrivez-vous"
+    },
+    "register": {
+      "title": "Inscription",
+      "username": "Nom d'utilisateur",
+      "email": "Email",
+      "password": "Mot de passe",
+      "confirm_password": "Confirmer le mot de passe",
+      "submit": "S'inscrire",
+      "has_account": "Deja un compte?",
+      "login_link": "Connectez-vous"
+    }
+  },
+  "dashboard": {
+    "no_challenge": {
+      "title": "Pas de Challenge Actif",
+      "description": "Vous devez d'abord acheter un challenge pour commencer a trader.",
+      "cta": "Choisir un Challenge"
+    },
+    "stats": {
+      "balance": "Solde",
+      "equity": "Equite",
+      "pnl_total": "P&L Total",
+      "status": "Statut",
+      "status_active": "En Cours",
+      "status_passed": "Reussi",
+      "status_failed": "Echoue"
+    },
+    "rules": {
+      "title": "Regles du Challenge",
+      "daily_loss": "Perte Max Journaliere",
+      "total_loss": "Perte Max Totale",
+      "profit_target": "Objectif Profit"
+    },
+    "markets": {
+      "us": "US",
+      "crypto": "Crypto",
+      "morocco": "Maroc"
+    },
+    "trading": {
+      "title": "Executer un Trade",
+      "quantity": "Quantite",
+      "value": "Valeur",
+      "buy": "ACHETER",
+      "sell": "VENDRE",
+      "success": "Trade execute",
+      "challenge_failed": "Challenge ECHOUE",
+      "challenge_passed": "Felicitations! Challenge REUSSI!",
+      "error": "Erreur lors du trade"
+    },
+    "signals": {
+      "title": "Signaux IA",
+      "buy": "ACHETER",
+      "sell": "VENDRE",
+      "hold": "HOLD",
+      "confidence": "Confiance",
+      "no_signals": "Aucun signal disponible",
+      "loading": "Chargement des signaux..."
+    },
+    "positions": {
+      "title": "Positions Ouvertes",
+      "no_positions": "Aucune position"
+    }
+  },
+  "pricing": {
+    "title": "Choisissez Votre Challenge",
+    "subtitle": "Selectionnez le plan qui correspond a vos objectifs de trading",
+    "starter": {
+      "name": "Starter",
+      "balance": "5 000 $",
+      "description": "Ideal pour les debutants"
+    },
+    "pro": {
+      "name": "Pro",
+      "balance": "10 000 $",
+      "description": "Pour les traders intermediaires",
+      "popular": "Populaire"
+    },
+    "elite": {
+      "name": "Elite",
+      "balance": "25 000 $",
+      "description": "Pour les traders experimentes"
+    },
+    "features": {
+      "daily_loss": "Perte Max Journaliere: 5%",
+      "total_loss": "Perte Max Totale: 10%",
+      "profit_target": "Objectif de Profit: 10%",
+      "real_data": "Donnees de Marche en Direct",
+      "ai_signals": "Signaux IA Inclus"
+    },
+    "select": "Choisir ce Plan",
+    "payment": {
+      "title": "Paiement",
+      "method": "Methode de Paiement",
+      "paypal": "PayPal",
+      "mock": "Simulation (Demo)",
+      "processing": "Traitement en cours...",
+      "success": "Paiement reussi! Challenge active.",
+      "error": "Erreur de paiement"
+    }
+  },
+  "leaderboard": {
+    "title": "Classement",
+    "subtitle": "Top 10 Traders du Mois",
+    "rank": "Rang",
+    "trader": "Trader",
+    "profit": "Profit",
+    "trades": "Trades",
+    "win_rate": "Taux de Reussite",
+    "plan": "Plan",
+    "no_traders": "Aucun trader dans le classement",
+    "your_rank": "Votre Position",
+    "percentile": "Percentile"
+  },
+  "admin": {
+    "title": "Administration",
+    "stats": {
+      "total_users": "Utilisateurs",
+      "active_challenges": "Challenges Actifs",
+      "passed_challenges": "Challenges Reussis",
+      "failed_challenges": "Challenges Echoues",
+      "total_trades": "Total Trades"
+    },
+    "users": {
+      "title": "Gestion des Utilisateurs",
+      "search": "Rechercher un utilisateur...",
+      "role": "Role",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "challenges": {
+      "title": "Gestion des Challenges",
+      "status_filter": "Filtrer par statut",
+      "update_status": "Modifier le Statut"
+    },
+    "superadmin": {
+      "title": "Configuration SuperAdmin",
+      "paypal": {
+        "title": "Configuration PayPal",
+        "client_id": "Client ID PayPal",
+        "client_secret": "Client Secret PayPal",
+        "save": "Enregistrer la Configuration"
+      }
+    }
+  },
+  "footer": {
+    "copyright": "TradeSense AI. Tous droits reserves.",
+    "tagline": "La premiere Prop Firm assistee par IA pour l'Afrique"
+  }
+}

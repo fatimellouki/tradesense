@@ -7,11 +7,13 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import Trade, Position, UserChallenge, MarketData, AISignal, db
 from services.market_data import MarketDataService
 from services.challenge_engine import ChallengeEngine
+from services.ai_signals import AISignalService
 from datetime import datetime
 
 trading_bp = Blueprint('trading', __name__)
 market_service = MarketDataService()
 challenge_engine = ChallengeEngine()
+ai_signal_service = AISignalService()
 
 
 @trading_bp.route('/market-data', methods=['GET'])
@@ -80,12 +82,15 @@ def get_symbol_data(symbol):
 
 @trading_bp.route('/refresh-prices', methods=['POST'])
 def refresh_prices():
-    """Refresh all market prices (called by scheduler)"""
+    """Refresh all market prices and regenerate AI signals (called by scheduler)"""
     updated = market_service.refresh_all_prices()
+
+    # Generate new AI signals based on updated prices
+    signals = ai_signal_service.generate_all_signals()
 
     return jsonify({
         'success': True,
-        'message': f'Updated {updated} prices'
+        'message': f'Updated {updated} prices and generated {len(signals)} signals'
     })
 
 
@@ -293,14 +298,107 @@ def close_position(position_id):
 @jwt_required()
 def get_ai_signals():
     """Get AI trading signals"""
-    signals = AISignal.query.filter(
-        AISignal.expires_at > datetime.utcnow()
-    ).order_by(AISignal.generated_at.desc()).limit(10).all()
+    market = request.args.get('market')  # Optional: filter by market
+    limit = request.args.get('limit', 10, type=int)
+
+    # Get active signals from the service
+    signals = ai_signal_service.get_active_signals(market=market, limit=limit)
+
+    # If no signals exist, generate them
+    if not signals:
+        ai_signal_service.generate_all_signals()
+        signals = ai_signal_service.get_active_signals(market=market, limit=limit)
 
     return jsonify({
         'success': True,
         'data': {
-            'signals': [s.to_dict() for s in signals]
+            'signals': signals
+        }
+    })
+
+
+@trading_bp.route('/signals/<symbol>', methods=['GET'])
+@jwt_required()
+def get_symbol_signal(symbol):
+    """Get AI signal for a specific symbol"""
+    signal = ai_signal_service.get_signal_for_symbol(symbol)
+
+    if not signal:
+        # Try to generate signal for this symbol
+        market_data = MarketData.query.filter_by(symbol=symbol.upper()).first()
+        if market_data:
+            price_data = {
+                'price': float(market_data.price),
+                'open': float(market_data.open_price) if market_data.open_price else None,
+                'high': float(market_data.high_price) if market_data.high_price else None,
+                'low': float(market_data.low_price) if market_data.low_price else None,
+                'change_percent': float(market_data.change_percent) if market_data.change_percent else 0,
+                'market': market_data.market
+            }
+            signal_data = ai_signal_service.generate_signal(symbol.upper(), price_data)
+            if signal_data:
+                ai_signal_service._save_signal(signal_data)
+                signal = signal_data
+
+    return jsonify({
+        'success': True,
+        'data': {
+            'signal': signal
+        }
+    })
+
+
+@trading_bp.route('/historical/<symbol>', methods=['GET'])
+def get_historical_data(symbol):
+    """Get historical OHLC data for charts - public endpoint"""
+    period = request.args.get('period', '1mo')
+    interval = request.args.get('interval', '1d')
+
+    data = market_service.get_historical_data(symbol.upper(), period, interval)
+
+    if not data:
+        return jsonify({
+            'success': False,
+            'error': f'No historical data available for {symbol}'
+        }), 404
+
+    # Transform to lightweight-charts format
+    chart_data = []
+    for row in data:
+        try:
+            # Handle different date field names from various sources
+            date_val = row.get('Date') or row.get('seance') or row.get('date')
+            if not date_val:
+                continue
+
+            # Convert to unix timestamp
+            if isinstance(date_val, str):
+                dt = datetime.fromisoformat(date_val.split('T')[0].split(' ')[0])
+            else:
+                dt = date_val
+
+            timestamp = int(dt.timestamp())
+
+            chart_data.append({
+                'time': timestamp,
+                'open': float(row.get('Open') or row.get('open', 0)),
+                'high': float(row.get('High') or row.get('high', 0)),
+                'low': float(row.get('Low') or row.get('low', 0)),
+                'close': float(row.get('Close') or row.get('close', 0)),
+            })
+        except (ValueError, TypeError, AttributeError):
+            continue
+
+    # Sort by time (oldest first - required by lightweight-charts)
+    chart_data.sort(key=lambda x: x['time'])
+
+    return jsonify({
+        'success': True,
+        'data': {
+            'symbol': symbol.upper(),
+            'period': period,
+            'interval': interval,
+            'candles': chart_data
         }
     })
 

@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/authStore';
 import { Mail, Lock, User, AlertCircle } from 'lucide-react';
 
 export default function RegisterPage() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -18,12 +20,12 @@ export default function RegisterPage() {
     setLocalError('');
 
     if (password !== confirmPassword) {
-      setLocalError('Les mots de passe ne correspondent pas');
+      setLocalError(t('auth.register.password_mismatch', { defaultValue: 'Passwords do not match' }));
       return;
     }
 
     if (password.length < 6) {
-      setLocalError('Le mot de passe doit contenir au moins 6 caracteres');
+      setLocalError(t('auth.register.password_min_length', { defaultValue: 'Password must be at least 6 characters' }));
       return;
     }
 
@@ -42,9 +44,9 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         <div className="card">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white">Creer un compte</h1>
+            <h1 className="text-3xl font-bold text-white">{t('auth.register.title')}</h1>
             <p className="text-gray-400 mt-2">
-              Rejoignez TradeSense AI et commencez a trader
+              {t('auth.register.subtitle', { defaultValue: 'Join TradeSense AI and start trading' })}
             </p>
           </div>
 
@@ -58,7 +60,7 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Email
+                {t('auth.register.email')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
@@ -75,7 +77,7 @@ export default function RegisterPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Nom d'utilisateur
+                {t('auth.register.username')}
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
@@ -92,7 +94,7 @@ export default function RegisterPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Mot de passe
+                {t('auth.register.password')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
@@ -109,7 +111,7 @@ export default function RegisterPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Confirmer le mot de passe
+                {t('auth.register.confirm_password')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
@@ -129,15 +131,15 @@ export default function RegisterPage() {
               disabled={isLoading}
               className="w-full py-3 bg-primary-600 hover:bg-primary-700 disabled:bg-primary-800 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition"
             >
-              {isLoading ? 'Creation...' : 'Creer mon compte'}
+              {isLoading ? t('common.loading') : t('auth.register.submit')}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-gray-400">
-              Deja un compte?{' '}
+              {t('auth.register.has_account')}{' '}
               <Link to="/login" className="text-primary-500 hover:text-primary-400">
-                Se connecter
+                {t('auth.register.login_link')}
               </Link>
             </p>
           </div>

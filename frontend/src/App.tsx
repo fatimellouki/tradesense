@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { useEffect } from 'react';
 import { useAuthStore } from './store/authStore';
 import { useUIStore } from './store/uiStore';
+import { changeLanguage } from './i18n';
 
 // Pages
 import LandingPage from './components/LandingPage';
@@ -22,7 +23,7 @@ import ProtectedRoute from './features/auth/ProtectedRoute';
 function AppLayout() {
   const location = useLocation();
   const { checkAuth, isAuthenticated } = useAuthStore();
-  const { darkMode } = useUIStore();
+  const { darkMode, language } = useUIStore();
 
   // Hide navbar on admin routes
   const isAdminRoute = location.pathname.startsWith('/admin');
@@ -38,6 +39,11 @@ function AppLayout() {
       document.documentElement.classList.add('light');
     }
   }, [darkMode]);
+
+  // Sync i18next with Zustand language state on load and when language changes
+  useEffect(() => {
+    changeLanguage(language);
+  }, [language]);
 
   return (
     <div className="min-h-screen">

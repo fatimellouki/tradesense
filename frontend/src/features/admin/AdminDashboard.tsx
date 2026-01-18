@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/authStore';
 import { Users, Trophy, TrendingUp, AlertTriangle, Settings } from 'lucide-react';
 import api from '../../services/api';
@@ -13,6 +14,7 @@ interface Stats {
 }
 
 export default function AdminDashboard() {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [stats, setStats] = useState<Stats | null>(null);
   const [paypalClientId, setPaypalClientId] = useState('');
@@ -68,8 +70,8 @@ export default function AdminDashboard() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-          <p className="text-gray-400">Role: {user?.role}</p>
+          <h1 className="text-3xl font-bold">{t('admin.title')}</h1>
+          <p className="text-gray-400">{t('admin.users.role', { defaultValue: 'Role' })}: {user?.role}</p>
         </div>
       </div>
 
@@ -78,35 +80,35 @@ export default function AdminDashboard() {
         <div className="card">
           <Users className="text-blue-500 mb-2" size={24} />
           <p className="text-2xl font-bold">{stats?.total_users || 0}</p>
-          <p className="text-gray-400 text-sm">Utilisateurs</p>
+          <p className="text-gray-400 text-sm">{t('admin.stats.total_users')}</p>
         </div>
 
         <div className="card">
           <TrendingUp className="text-green-500 mb-2" size={24} />
           <p className="text-2xl font-bold">{stats?.active_challenges || 0}</p>
-          <p className="text-gray-400 text-sm">Challenges Actifs</p>
+          <p className="text-gray-400 text-sm">{t('admin.stats.active_challenges')}</p>
         </div>
 
         <div className="card">
           <Trophy className="text-yellow-500 mb-2" size={24} />
           <p className="text-2xl font-bold">{stats?.passed_challenges || 0}</p>
-          <p className="text-gray-400 text-sm">Reussis</p>
+          <p className="text-gray-400 text-sm">{t('admin.stats.passed_challenges')}</p>
         </div>
 
         <div className="card">
           <AlertTriangle className="text-red-500 mb-2" size={24} />
           <p className="text-2xl font-bold">{stats?.failed_challenges || 0}</p>
-          <p className="text-gray-400 text-sm">Echoues</p>
+          <p className="text-gray-400 text-sm">{t('admin.stats.failed_challenges')}</p>
         </div>
 
         <div className="card">
           <p className="text-2xl font-bold">{stats?.total_trades || 0}</p>
-          <p className="text-gray-400 text-sm">Total Trades</p>
+          <p className="text-gray-400 text-sm">{t('admin.stats.total_trades')}</p>
         </div>
 
         <div className="card">
           <p className="text-2xl font-bold text-primary-500">{stats?.pass_rate || 0}%</p>
-          <p className="text-gray-400 text-sm">Taux de Reussite</p>
+          <p className="text-gray-400 text-sm">{t('admin.stats.pass_rate', { defaultValue: 'Pass Rate' })}</p>
         </div>
       </div>
 
@@ -115,11 +117,11 @@ export default function AdminDashboard() {
         <div className="card">
           <div className="flex items-center mb-6">
             <Settings className="text-primary-500 mr-3" size={24} />
-            <h2 className="text-xl font-bold">Configuration SuperAdmin</h2>
+            <h2 className="text-xl font-bold">{t('admin.superadmin.title')}</h2>
           </div>
 
           <div className="max-w-md">
-            <h3 className="font-semibold mb-4">Credentials PayPal</h3>
+            <h3 className="font-semibold mb-4">{t('admin.superadmin.paypal.title')}</h3>
 
             {message && (
               <div className={`mb-4 p-3 rounded-lg ${
@@ -131,7 +133,7 @@ export default function AdminDashboard() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Client ID</label>
+                <label className="block text-sm text-gray-400 mb-2">{t('admin.superadmin.paypal.client_id')}</label>
                 <input
                   type="text"
                   value={paypalClientId}
@@ -142,7 +144,7 @@ export default function AdminDashboard() {
               </div>
 
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Client Secret</label>
+                <label className="block text-sm text-gray-400 mb-2">{t('admin.superadmin.paypal.client_secret')}</label>
                 <input
                   type="password"
                   value={paypalSecret}
@@ -157,7 +159,7 @@ export default function AdminDashboard() {
                 disabled={isSaving || !paypalClientId || !paypalSecret}
                 className="w-full py-3 bg-primary-600 hover:bg-primary-700 disabled:bg-primary-800 text-white font-semibold rounded-lg transition"
               >
-                {isSaving ? 'Saving...' : 'Save PayPal Credentials'}
+                {isSaving ? t('common.loading') : t('admin.superadmin.paypal.save')}
               </button>
             </div>
           </div>

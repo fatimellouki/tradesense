@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useTradingStore } from '../../store/tradingStore';
 import TradingChart from './TradingChart';
+import api from '../../services/api';
 import {
   TrendingUp,
   TrendingDown,
@@ -9,7 +11,9 @@ import {
   BarChart2,
   AlertTriangle,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Brain,
+  RefreshCw
 } from 'lucide-react';
 
 const SYMBOLS = {
@@ -18,7 +22,17 @@ const SYMBOLS = {
   morocco: ['IAM', 'ATW'],
 };
 
+interface AISignal {
+  symbol: string;
+  market: string;
+  signal: string;
+  confidence: number;
+  reasoning: string;
+  generated_at: string;
+}
+
 export default function Dashboard() {
+  const { t } = useTranslation();
   const {
     prices,
     positions,
@@ -37,18 +51,44 @@ export default function Dashboard() {
 
   const [quantity, setQuantity] = useState('1');
   const [tradeMessage, setTradeMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [aiSignals, setAiSignals] = useState<AISignal[]>([]);
+  const [signalsLoading, setSignalsLoading] = useState(false);
+
+  // Fetch AI signals
+  const fetchAISignals = async () => {
+    setSignalsLoading(true);
+    try {
+      const response = await api.get('/trading/signals?limit=6');
+      if (response.data.success) {
+        setAiSignals(response.data.data.signals);
+      }
+    } catch (error) {
+      console.error('Failed to fetch AI signals:', error);
+    } finally {
+      setSignalsLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchActiveChallenge();
     fetchPrices();
     fetchPositions();
+    fetchAISignals();
 
     // Refresh prices every 30 seconds
-    const interval = setInterval(() => {
+    const priceInterval = setInterval(() => {
       fetchPrice(selectedSymbol);
     }, 30000);
 
-    return () => clearInterval(interval);
+    // Refresh signals every 2 minutes
+    const signalInterval = setInterval(() => {
+      fetchAISignals();
+    }, 120000);
+
+    return () => {
+      clearInterval(priceInterval);
+      clearInterval(signalInterval);
+    };
   }, []);
 
   useEffect(() => {
@@ -63,42 +103,66 @@ export default function Dashboard() {
       if (result.data.challenge_status === 'failed') {
         setTradeMessage({
           type: 'error',
-          text: `Challenge ECHOUE: ${result.data.status_reason}`
+          text: `${t('dashboard.trading.challenge_failed')}: ${result.data.status_reason}`
         });
       } else if (result.data.challenge_status === 'passed') {
         setTradeMessage({
           type: 'success',
-          text: 'Felicitations! Challenge REUSSI!'
+          text: t('dashboard.trading.challenge_passed')
         });
       } else {
         setTradeMessage({
           type: 'success',
-          text: `Trade execute: ${side.toUpperCase()} ${quantity} ${selectedSymbol}`
+          text: `${t('dashboard.trading.success')}: ${side.toUpperCase()} ${quantity} ${selectedSymbol}`
         });
       }
+      // Refresh signals after trade
+      fetchAISignals();
     } catch (error: any) {
       setTradeMessage({
         type: 'error',
-        text: error.response?.data?.error || 'Erreur lors du trade'
+        text: error.response?.data?.error || t('dashboard.trading.error')
       });
     }
   };
 
   const currentPrice = prices[selectedSymbol];
 
+  const getSignalColor = (signal: string) => {
+    switch (signal?.toLowerCase()) {
+      case 'buy':
+        return 'bg-green-500/10 text-green-500 border-green-500/30';
+      case 'sell':
+        return 'bg-red-500/10 text-red-500 border-red-500/30';
+      default:
+        return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30';
+    }
+  };
+
+  const getSignalLabel = (signal: string) => {
+    switch (signal?.toLowerCase()) {
+      case 'buy':
+        return t('dashboard.signals.buy');
+      case 'sell':
+        return t('dashboard.signals.sell');
+      default:
+        return t('dashboard.signals.hold');
+    }
+  };
+
   if (!activeChallenge) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 text-center">
         <AlertTriangle className="mx-auto text-yellow-500 mb-4" size={48} />
-        <h2 className="text-2xl font-bold mb-4">Pas de Challenge Actif</h2>
+        <h2 className="text-2xl font-bold mb-4">{t('dashboard.no_challenge.title')}</h2>
         <p className="text-gray-400 mb-8">
-          Vous devez d'abord acheter un challenge pour commencer a trader.
+          {t('dashboard.no_challenge.description')}
         </p>
         <Link
           to="/pricing"
           className="inline-block px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition"
         >
-          Choisir un Challenge
+          {t('dashboard.no_challenge.cta')}
         </Link>
       </div>
     );
@@ -114,7 +178,7 @@ export default function Dashboard() {
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-400 text-sm">Solde</p>
+              <p className="text-gray-400 text-sm">{t('dashboard.stats.balance')}</p>
               <p className="text-2xl font-bold">${activeChallenge.current_balance.toLocaleString()}</p>
             </div>
             <DollarSign className="text-primary-500" size={24} />
@@ -124,7 +188,7 @@ export default function Dashboard() {
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-400 text-sm">Equite</p>
+              <p className="text-gray-400 text-sm">{t('dashboard.stats.equity')}</p>
               <p className="text-2xl font-bold">${activeChallenge.equity.toLocaleString()}</p>
             </div>
             <BarChart2 className="text-blue-500" size={24} />
@@ -134,7 +198,7 @@ export default function Dashboard() {
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-400 text-sm">P&L Total</p>
+              <p className="text-gray-400 text-sm">{t('dashboard.stats.pnl_total')}</p>
               <p className={`text-2xl font-bold ${isProfitable ? 'text-green-500' : 'text-red-500'}`}>
                 {isProfitable ? '+' : ''}{profitPercent.toFixed(2)}%
               </p>
@@ -150,13 +214,13 @@ export default function Dashboard() {
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-400 text-sm">Statut</p>
+              <p className="text-gray-400 text-sm">{t('dashboard.stats.status')}</p>
               <p className={`text-lg font-bold uppercase ${
                 activeChallenge.status === 'active' ? 'text-blue-500' :
                 activeChallenge.status === 'passed' ? 'text-green-500' : 'text-red-500'
               }`}>
-                {activeChallenge.status === 'active' ? 'En Cours' :
-                 activeChallenge.status === 'passed' ? 'Reussi' : 'Echoue'}
+                {activeChallenge.status === 'active' ? t('dashboard.stats.status_active') :
+                 activeChallenge.status === 'passed' ? t('dashboard.stats.status_passed') : t('dashboard.stats.status_failed')}
               </p>
             </div>
           </div>
@@ -165,11 +229,11 @@ export default function Dashboard() {
 
       {/* Challenge Rules Progress */}
       <div className="card mb-6">
-        <h3 className="text-lg font-semibold mb-4">Regles du Challenge</h3>
+        <h3 className="text-lg font-semibold mb-4">{t('dashboard.rules.title')}</h3>
         <div className="grid md:grid-cols-3 gap-6">
           <div>
             <div className="flex justify-between text-sm mb-1">
-              <span className="text-gray-400">Perte Max Journaliere</span>
+              <span className="text-gray-400">{t('dashboard.rules.daily_loss')}</span>
               <span className={activeChallenge.daily_pnl < 0 ? 'text-red-500' : 'text-gray-300'}>
                 {((activeChallenge.daily_pnl / activeChallenge.initial_balance) * 100).toFixed(2)}% / -5%
               </span>
@@ -186,7 +250,7 @@ export default function Dashboard() {
 
           <div>
             <div className="flex justify-between text-sm mb-1">
-              <span className="text-gray-400">Perte Max Totale</span>
+              <span className="text-gray-400">{t('dashboard.rules.total_loss')}</span>
               <span className={profitPercent < 0 ? 'text-red-500' : 'text-gray-300'}>
                 {Math.min(profitPercent, 0).toFixed(2)}% / -10%
               </span>
@@ -203,7 +267,7 @@ export default function Dashboard() {
 
           <div>
             <div className="flex justify-between text-sm mb-1">
-              <span className="text-gray-400">Objectif Profit</span>
+              <span className="text-gray-400">{t('dashboard.rules.profit_target')}</span>
               <span className={profitPercent > 0 ? 'text-green-500' : 'text-gray-300'}>
                 {Math.max(profitPercent, 0).toFixed(2)}% / 10%
               </span>
@@ -228,7 +292,7 @@ export default function Dashboard() {
             <div className="flex flex-wrap gap-2">
               {Object.entries(SYMBOLS).map(([market, symbols]) => (
                 <div key={market} className="flex items-center gap-2">
-                  <span className="text-gray-500 text-sm uppercase">{market}:</span>
+                  <span className="text-gray-500 text-sm uppercase">{t(`dashboard.markets.${market}`)}:</span>
                   {symbols.map((symbol) => (
                     <button
                       key={symbol}
@@ -283,7 +347,7 @@ export default function Dashboard() {
         <div className="space-y-4">
           {/* Trade Form */}
           <div className="card">
-            <h3 className="text-lg font-semibold mb-4">Executer un Trade</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('dashboard.trading.title')}</h3>
 
             {tradeMessage && (
               <div className={`mb-4 p-3 rounded-lg ${
@@ -294,7 +358,7 @@ export default function Dashboard() {
             )}
 
             <div className="mb-4">
-              <label className="block text-sm text-gray-400 mb-2">Quantite</label>
+              <label className="block text-sm text-gray-400 mb-2">{t('dashboard.trading.quantity')}</label>
               <input
                 type="number"
                 value={quantity}
@@ -307,7 +371,7 @@ export default function Dashboard() {
 
             {currentPrice && (
               <p className="text-sm text-gray-400 mb-4">
-                Valeur: ${(parseFloat(quantity) * currentPrice.price).toLocaleString()}
+                {t('dashboard.trading.value')}: ${(parseFloat(quantity) * currentPrice.price).toLocaleString()}
               </p>
             )}
 
@@ -317,42 +381,62 @@ export default function Dashboard() {
                 disabled={isLoading || activeChallenge.status !== 'active'}
                 className="py-3 bg-green-600 hover:bg-green-700 disabled:bg-green-800 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition"
               >
-                ACHETER
+                {t('dashboard.trading.buy')}
               </button>
               <button
                 onClick={() => handleTrade('sell')}
                 disabled={isLoading || activeChallenge.status !== 'active'}
                 className="py-3 bg-red-600 hover:bg-red-700 disabled:bg-red-800 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition"
               >
-                VENDRE
+                {t('dashboard.trading.sell')}
               </button>
             </div>
           </div>
 
           {/* AI Signals */}
           <div className="card">
-            <h3 className="text-lg font-semibold mb-4">Signaux IA</h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-green-500/10 rounded-lg">
-                <span>BTC-USD</span>
-                <span className="text-green-500 font-semibold">ACHETER</span>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-yellow-500/10 rounded-lg">
-                <span>AAPL</span>
-                <span className="text-yellow-500 font-semibold">HOLD</span>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-red-500/10 rounded-lg">
-                <span>IAM</span>
-                <span className="text-red-500 font-semibold">VENDRE</span>
-              </div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <Brain className="text-primary-500" size={20} />
+                {t('dashboard.signals.title')}
+              </h3>
+              <button
+                onClick={fetchAISignals}
+                disabled={signalsLoading}
+                className="p-1 text-gray-400 hover:text-white transition"
+                title="Refresh signals"
+              >
+                <RefreshCw size={16} className={signalsLoading ? 'animate-spin' : ''} />
+              </button>
             </div>
+
+            {signalsLoading && aiSignals.length === 0 ? (
+              <p className="text-gray-500 text-center py-4">{t('dashboard.signals.loading')}</p>
+            ) : aiSignals.length === 0 ? (
+              <p className="text-gray-500 text-center py-4">{t('dashboard.signals.no_signals')}</p>
+            ) : (
+              <div className="space-y-2">
+                {aiSignals.slice(0, 5).map((signal, index) => (
+                  <div
+                    key={`${signal.symbol}-${index}`}
+                    className={`flex items-center justify-between p-3 rounded-lg border ${getSignalColor(signal.signal)}`}
+                  >
+                    <div className="flex flex-col">
+                      <span className="font-medium">{signal.symbol.replace('-USD', '')}</span>
+                      <span className="text-xs opacity-70">{signal.confidence}% {t('dashboard.signals.confidence')}</span>
+                    </div>
+                    <span className="font-semibold">{getSignalLabel(signal.signal)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Open Positions */}
           <div className="card">
-            <h3 className="text-lg font-semibold mb-4">Positions Ouvertes</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('dashboard.positions.title')}</h3>
             {positions.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">Aucune position</p>
+              <p className="text-gray-500 text-center py-4">{t('dashboard.positions.no_positions')}</p>
             ) : (
               <div className="space-y-2">
                 {positions.map((pos) => (
